@@ -1,0 +1,25 @@
+name: test
+on:
+  workflow_dispatch:
+
+  release:
+    types: [published]
+jobs:
+  gradle:
+    runs-on: ubuntu
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: echo "event name is:" ${{ github.event_name }}
+      - run: echo "event type is:" ${{ github.event.action }}
+
+      - name: upload release asset (ReleaseNotes)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./sample.pdf
+          asset_name: Release.pdf
+          asset_content_type: application/pdf
